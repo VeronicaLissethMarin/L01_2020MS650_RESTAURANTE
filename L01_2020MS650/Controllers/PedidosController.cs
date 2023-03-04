@@ -8,15 +8,16 @@ namespace L01_2020MS650.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class restauranteDBController : ControllerBase
+    public class PedidosController : ControllerBase
     {
 
         private readonly restauranteContext _restauranteDBContexto;
 
-        public restauranteDBController(restauranteContext equiposContexto)
+        public PedidosController(restauranteContext restauranteContexto)
         {
-            _restauranteDBContexto = equiposContexto;
+            _restauranteDBContexto = restauranteContexto;
         }
 
+        
     }
 }
