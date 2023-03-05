@@ -4,7 +4,7 @@ namespace L01_2020MS650.Models
     public class clientes
     {
         [Key]
-        public int clienteid { get; set; }
+        public int clienteId { get; set; }
 
         public string nombreCliente { get; set; }
 

@@ -12,7 +12,7 @@ namespace L01_2020MS650.Models
 
         public DbSet<clientes> clientes { get; set; }
 
-        public DbSet<motorista> motorista { get; set; }
+        public DbSet<motoristas> motoristas { get; set; }
 
         public DbSet<pedidos> pedidos { get; set; }
 

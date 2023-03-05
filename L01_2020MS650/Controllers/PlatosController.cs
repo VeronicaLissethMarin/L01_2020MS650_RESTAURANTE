@@ -20,55 +20,40 @@ namespace L01_2020MS650.Controllers
         [Route("GetAll")]
         public IActionResult Get()
         {
-            List<pedidos> listadoEquipo = (from e in _restauranteDBContexto.pedidos select e).ToList();
+            List<platos> listadoPlatos = (from e in _restauranteDBContexto.platos select e).ToList();
 
-            if (listadoEquipo.Count() == 0)
+            if (listadoPlatos.Count() == 0)
             {
                 return NotFound();
             }
-            return Ok(listadoEquipo);
+            return Ok(listadoPlatos);
         }
 
         [HttpGet]
         [Route("GetById/{id}")]
         public IActionResult Get(int id)
         {
-            pedidos? pedido = (from e in _restauranteDBContexto.pedidos
-                               where e.id_equipos == id
+            platos? plato = (from e in _restauranteDBContexto.platos
+                               where e.platoId == id
                                select e).FirstOrDefault();
 
-            if (pedido == null)
+            if (plato == null)
             {
                 return NotFound();
             }
-            return Ok(pedido);
+            return Ok(plato);
         }
 
-        [HttpGet]
-        [Route("Find/{filtro}")]
-
-        public IActionResult FindByDescription(string filtro)
-        {
-            pedidos? pedido = (from e in _restauranteDBContexto.pedidos
-                               where e.descripcion.Contains(filtro)
-                               select e).FirstOrDefault();
-
-            if (pedido == null)
-            {
-                return NotFound();
-            }
-            return Ok(pedido);
-        }
 
         [HttpGet]
         [Route("Add")]
-        public IActionResult GuardarEquipo([FromBody] pedidos pedido)
+        public IActionResult Guardarplato([FromBody] platos plato)
         {
             try
             {
-                _restauranteDBContexto.pedidos.Add(pedido);
+                _restauranteDBContexto.platos.Add(plato);
                 _restauranteDBContexto.SaveChanges();
-                return Ok(pedido);
+                return Ok(plato);
             }
             catch (Exception ex)
             {
@@ -79,49 +64,64 @@ namespace L01_2020MS650.Controllers
 
         [HttpGet]
         [Route("actualizar/{id}")]
-        public IActionResult ActualizarEquipo(int id, [FromBody] pedidos equipoModificar)
+        public IActionResult ActualizarPlatos(int id, [FromBody] platos platoModificar)
         {
-            pedidos? equipoActual = (from e in _restauranteDBContexto.pedidos
-                                     where e.id_equipos == id
+            platos? platoActual = (from e in _restauranteDBContexto.platos
+                                     where e.platoId == id
                                      select e).FirstOrDefault();
 
-            if (equipoActual == null)
+            if (platoActual == null)
             {
                 return NotFound();
             }
 
-            equipoActual.nombre = equipoModificar.nombre;
-            equipoActual.descripcion = equipoModificar.descripcion;
-            equipoActual.marca_id = equipoModificar.marca_id;
-            equipoActual.tipo_equipo_id = equipoModificar.tipo_equipo_id;
-            equipoActual.anio_compra = equipoModificar.anio_compra;
-            equipoActual.costo = equipoModificar.costo;
+            platoActual.platoId = platoModificar.platoId;
+            platoActual.precio = platoModificar.precio;
 
-            _restauranteDBContexto.Entry(equipoActual).State = EntityState.Modified;
+            _restauranteDBContexto.Entry(platoActual).State = EntityState.Modified;
             _restauranteDBContexto.SaveChanges();
 
-            return Ok(equipoModificar);
+            return Ok(platoModificar);
         }
 
 
         [HttpGet]
         [Route("eliminar/{id}")]
-        public IActionResult EliminarEquipo(int id)
+        public IActionResult Eliminarplato(int id)
         {
-            pedidos? equipo = (from e in _restauranteDBContexto.pedidos
-                               where e.id_equipos == id
+            platos? plato = (from e in _restauranteDBContexto.platos
+                               where e.platoId == id
                                select e).FirstOrDefault();
 
-            if (equipo == null)
+            if (plato == null)
             {
                 return NotFound();
             }
 
-            _restauranteDBContexto.pedidos.Attach(equipo);
-            _restauranteDBContexto.pedidos.Remove(equipo);
+            _restauranteDBContexto.platos.Attach(plato);
+            _restauranteDBContexto.platos.Remove(plato);
             _restauranteDBContexto.SaveChanges();
 
-            return Ok(equipo);
+            return Ok(plato);
+        }
+
+
+        //Filtrar por palabra que contenga un plato
+
+        [HttpGet]
+        [Route("Find/{filtro}")]
+
+        public IActionResult FiltrarxNombre(string filtro)
+        {
+            platos? plato = (from e in _restauranteDBContexto.platos
+                             where e.nombrePlato.Contains(filtro)
+                             select e).FirstOrDefault();
+
+            if (plato == null)
+            {
+                return NotFound();
+            }
+            return Ok(plato);
         }
     }
 }

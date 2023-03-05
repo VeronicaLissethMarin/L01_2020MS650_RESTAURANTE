@@ -16,59 +16,45 @@ namespace L01_2020MS650.Controllers
             _restauranteDBContexto = restauranteContexto;
         }
 
-        [HttpGet]
-        [Route("GetAll")]
+       [HttpGet]
+       [Route("GetAll")]
         public IActionResult Get()
         {
-            List<pedidos> listadoEquipo = (from e in _restauranteDBContexto.pedidos select e).ToList();
+           List<clientes> listadocliente = (from e in _restauranteDBContexto.clientes select e).ToList();
 
-            if (listadoEquipo.Count() == 0)
-            {
-                return NotFound();
+            if (listadocliente.Count() == 0)
+           {
+               return NotFound();
             }
-            return Ok(listadoEquipo);
-        }
+           return Ok(listadocliente);
+       }
+
 
         [HttpGet]
         [Route("GetById/{id}")]
         public IActionResult Get(int id)
         {
-            pedidos? pedido = (from e in _restauranteDBContexto.pedidos
-                               where e.id_equipos == id
+            clientes? clientes = (from e in _restauranteDBContexto.clientes
+                               where e.clienteId == id
                                select e).FirstOrDefault();
 
-            if (pedido == null)
+            if (clientes == null)
             {
                 return NotFound();
             }
-            return Ok(pedido);
+            return Ok(clientes);
         }
 
-        [HttpGet]
-        [Route("Find/{filtro}")]
-
-        public IActionResult FindByDescription(string filtro)
-        {
-            pedidos? pedido = (from e in _restauranteDBContexto.pedidos
-                               where e.descripcion.Contains(filtro)
-                               select e).FirstOrDefault();
-
-            if (pedido == null)
-            {
-                return NotFound();
-            }
-            return Ok(pedido);
-        }
 
         [HttpGet]
         [Route("Add")]
-        public IActionResult GuardarEquipo([FromBody] pedidos pedido)
+        public IActionResult Guardarcliente([FromBody] clientes cliente)
         {
             try
             {
-                _restauranteDBContexto.pedidos.Add(pedido);
+                _restauranteDBContexto.clientes.Add(cliente);
                 _restauranteDBContexto.SaveChanges();
-                return Ok(pedido);
+                return Ok(cliente);
             }
             catch (Exception ex)
             {
@@ -79,49 +65,61 @@ namespace L01_2020MS650.Controllers
 
         [HttpGet]
         [Route("actualizar/{id}")]
-        public IActionResult ActualizarEquipo(int id, [FromBody] pedidos equipoModificar)
+        public IActionResult Actualizarcliente(int id, [FromBody] clientes clienteModificar)
         {
-            pedidos? equipoActual = (from e in _restauranteDBContexto.pedidos
-                                     where e.id_equipos == id
+            clientes? clienteActual = (from e in _restauranteDBContexto.clientes
+                                     where e.clienteId == id
                                      select e).FirstOrDefault();
 
-            if (equipoActual == null)
+            if (clienteActual == null)
             {
                 return NotFound();
             }
 
-            equipoActual.nombre = equipoModificar.nombre;
-            equipoActual.descripcion = equipoModificar.descripcion;
-            equipoActual.marca_id = equipoModificar.marca_id;
-            equipoActual.tipo_equipo_id = equipoModificar.tipo_equipo_id;
-            equipoActual.anio_compra = equipoModificar.anio_compra;
-            equipoActual.costo = equipoModificar.costo;
+            clienteActual.nombreCliente = clienteModificar.nombreCliente;
+            clienteActual.direccion = clienteModificar.direccion;
 
-            _restauranteDBContexto.Entry(equipoActual).State = EntityState.Modified;
+            _restauranteDBContexto.Entry(clienteActual).State = EntityState.Modified;
             _restauranteDBContexto.SaveChanges();
 
-            return Ok(equipoModificar);
+            return Ok(clienteModificar);
         }
 
 
         [HttpGet]
         [Route("eliminar/{id}")]
-        public IActionResult EliminarEquipo(int id)
+        public IActionResult Eliminarcliente(int id)
         {
-            pedidos? equipo = (from e in _restauranteDBContexto.pedidos
-                               where e.id_equipos == id
+            clientes? cliente = (from e in _restauranteDBContexto.clientes
+                               where e.clienteId == id
                                select e).FirstOrDefault();
 
-            if (equipo == null)
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            _restauranteDBContexto.pedidos.Attach(equipo);
-            _restauranteDBContexto.pedidos.Remove(equipo);
+            _restauranteDBContexto.clientes.Attach(cliente);
+            _restauranteDBContexto.clientes.Remove(cliente);
             _restauranteDBContexto.SaveChanges();
 
-            return Ok(equipo);
+            return Ok(cliente);
+        }
+
+        [HttpGet]
+        [Route("Find/{filtro}")]
+
+        public IActionResult BuscarxDireccion(string filtro)
+        {
+            clientes? cliente = (from e in _restauranteDBContexto.clientes
+                                  where e.direccion.Contains(filtro)
+                                  select e).FirstOrDefault();
+
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            return Ok(cliente);
         }
     }
 }
